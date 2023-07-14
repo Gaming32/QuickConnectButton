@@ -10,6 +10,7 @@ import net.minecraft.client.gui.screen.TitleScreen;
 import net.minecraft.client.gui.widget.ButtonWidget;
 import net.minecraft.client.network.ServerAddress;
 import net.minecraft.client.network.ServerInfo;
+import net.minecraft.client.option.ServerList;
 import net.minecraft.client.resource.language.I18n;
 import net.minecraft.text.Text;
 import org.spongepowered.asm.mixin.Mixin;
@@ -46,6 +47,10 @@ public class TitleScreenMixin extends Screen {
 
         this.addDrawableChild(new ButtonWidget(this.width / 2 + offsetX, y, config.dimensions.width, config.dimensions.height, Text.literal(config.connectButton),
                 (buttonWidget) -> {
+                    final ServerList serverList = new ServerList(client);
+                    serverList.loadFile();
+                    serverList.add(info, true);
+                    serverList.saveFile();
                     ConnectScreen.connect(this, this.client, ServerAddress.parse(config.address), info);
                     buttonWidget.playDownSound(this.client.getSoundManager());
                 }
